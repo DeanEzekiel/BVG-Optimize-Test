@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -24,39 +25,56 @@ public class InventoryManager : MonoBehaviour
 
     #endregion
 
+    private InventoryItem cachedSelectedItem;
+
     [Serializable]
     private class InventoryItemDatas
     {
         public InventoryItemData[] ItemDatas;
     }
 
-    private InventoryItemData[] ItemDatas;
+    #region Unity Callbacks
 
-    private List<InventoryItem> Items;
-
-    void Start()
+    private void Start()
     {
-        // Clear existing items already in the list.
-        var items = Container.GetComponentsInChildren<InventoryItem>();
-        foreach (InventoryItem item in items) {
-            item.gameObject.transform.SetParent(null);
-        }
+        //Application.targetFrameRate = 60;
 
-        ItemDatas = GenerateItemDatas(ItemJson, ItemGenerateScale);
-
-        // Instantiate items in the Scroll View.
-        Items = new List<InventoryItem>();
-        foreach (InventoryItemData itemData in ItemDatas) {
-            var newItem = GameObject.Instantiate<InventoryItem>(InventoryItemPrefab);
-            newItem.Icon.sprite = Icons[itemData.IconIndex];
-            newItem.Name.text = itemData.Name;
-            newItem.transform.SetParent(Container.transform);
-            newItem.Button.onClick.AddListener(() => { InventoryItemOnClick(newItem, itemData); });
-            Items.Add(newItem);       
-        }
+        var ItemDatas = GenerateItemDatas(ItemJson, ItemGenerateScale);
+        var firstItem = InstantiateAllItems(ItemDatas);
 
         // Select the first item.
-        InventoryItemOnClick(Items[0], ItemDatas[0]);
+        InventoryItemOnClick(firstItem);
+
+        Destroy(InventoryItemPrefab.gameObject);
+    }
+
+    #endregion
+
+    #region Class Implementation
+
+    /// <summary>
+    /// Instantiate items in the Scroll View.
+    /// </summary>
+    private InventoryItem InstantiateAllItems(InventoryItemData[] ItemDatas)
+    {
+        if (ItemDatas == null)
+        {
+            return null;
+        }
+
+        InventoryItem firstItem = null;
+        foreach (InventoryItemData itemData in ItemDatas)
+        {
+            var newItem = Instantiate(InventoryItemPrefab);
+            newItem.SetUpView(itemData, this);
+
+            if (firstItem == null)
+            {
+                firstItem = newItem;
+            }
+        }
+
+        return firstItem;
     }
 
     /// <summary>
@@ -65,25 +83,38 @@ public class InventoryManager : MonoBehaviour
     /// <param name="json">JSON to generate items from. JSON must be an array of InventoryItemData.</param>
     /// <param name="scale">Concats additional copies of the array parsed from json.</param>
     /// <returns>An array of InventoryItemData</returns>
-    private InventoryItemData[] GenerateItemDatas(string json, int scale) 
+    private InventoryItemData[] GenerateItemDatas(string json, int scale)
     {
         var itemDatas = JsonUtility.FromJson<InventoryItemDatas>(json).ItemDatas;
         var finalItemDatas = new InventoryItemData[itemDatas.Length * scale];
-        for (var i = 0; i < itemDatas.Length; i++) {
-            for (var j = 0; j < scale; j++) {
-                finalItemDatas[i + j*itemDatas.Length] = itemDatas[i];
+        for (var i = 0; i < itemDatas.Length; i++)
+        {
+            for (var j = 0; j < scale; j++)
+            {
+                finalItemDatas[i + j * itemDatas.Length] = itemDatas[i];
             }
         }
 
         return finalItemDatas;
     }
 
-    private void InventoryItemOnClick(InventoryItem itemClicked, InventoryItemData itemData) 
+    public void InventoryItemOnClick(InventoryItem itemClicked)
     {
-        foreach (var item in Items) {
-            item.Background.color = Color.white;
+        if (cachedSelectedItem != null)
+        {
+            cachedSelectedItem.SetSelected(false);
         }
-        itemClicked.Background.color = Color.red;
-        InfoPanel.DisplayInfo(itemData);
+
+        if (itemClicked == null)
+        {
+            return;
+        }
+
+        itemClicked.SetSelected(true);
+        cachedSelectedItem = itemClicked;
+        InfoPanel.DisplayInfo(itemClicked.ItemData);
     }
+
+    #endregion
+
 }
