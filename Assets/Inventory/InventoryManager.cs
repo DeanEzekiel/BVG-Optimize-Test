@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
+
+    #region Inspector Fields
+
     public InventoryInfoPanel InfoPanel;
     public InventoryItem InventoryItemPrefab;
 
@@ -18,6 +21,8 @@ public class InventoryManager : MonoBehaviour
 
     [Tooltip(tooltip:"Icons referenced by ItemData.IconIndex when instantiating new items.")]
     public Sprite[] Icons;
+
+    #endregion
 
     [Serializable]
     private class InventoryItemDatas
@@ -79,5 +84,6 @@ public class InventoryManager : MonoBehaviour
             item.Background.color = Color.white;
         }
         itemClicked.Background.color = Color.red;
+        InfoPanel.DisplayInfo(itemData);
     }
 }
