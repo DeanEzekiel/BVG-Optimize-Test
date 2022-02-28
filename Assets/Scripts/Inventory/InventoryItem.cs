@@ -4,10 +4,8 @@ using UnityEngine.UI;
 
 public class InventoryItem : MonoBehaviour
 {
-    #region Inspector Fields
 
-    [SerializeField]
-    private CanvasGroup canvasGroup;
+    #region Inspector Fields
 
     [SerializeField]
     private Image imageBackground;
@@ -41,7 +39,7 @@ public class InventoryItem : MonoBehaviour
         }
 
         this.itemData = itemData;
-        manager.ScrollTracker.RegisterCallback(OnScroll);
+        manager.ScrollTracker.SubscribeToOnViewRangeChange(OnViewRangeChange);
         imageIcon.sprite = manager.Icons[itemData.IconIndex];
         textName.text = itemData.Name;
         transform.SetParent(manager.Container.transform);
@@ -57,10 +55,9 @@ public class InventoryItem : MonoBehaviour
 
     #endregion
 
-    private void OnScroll(float minRange, float maxRange)
+    private void OnViewRangeChange(float minRange, float maxRange)
     {
         var posY = Mathf.Abs(rectTransform.localPosition.y);
-        //canvasGroup.alpha = (posY >= minRange && posY <= maxRange) ? 1f : 0.5f;
         gameObject.SetActive((posY >= minRange && posY <= maxRange));
     }
 

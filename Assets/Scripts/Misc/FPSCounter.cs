@@ -5,8 +5,11 @@ namespace Ren.Misc
 {
 
     /// <summary>
-    /// A class that shows the FPS, given a UI text (TMP) and a refresh interval value.
-    /// Destroys itself if
+    /// A class that shows the FPS, given a UI text (TMP) 
+    /// and a refresh interval value.
+    /// 
+    /// It shows the same FPS on the Game View's Stats panel
+    /// Destroys itself if:
     /// [A] no TMP text is assigned, and
     /// [B] build is not DEBUG or played in Unity Editor
     /// 
