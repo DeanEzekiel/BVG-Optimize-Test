@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Ren.Misc;
 
 public class InventoryManager : MonoBehaviour
@@ -17,12 +13,7 @@ public class InventoryManager : MonoBehaviour
 
     public ScrollRectVerticalContentTracker ScrollTracker;
 
-    public ContentSizeFitter fitter;
-    public VerticalLayoutGroup layoutGroup;
-
     [Space]
-
-    public GameObject Container;
 
     [Tooltip(tooltip:"Loads the list using this format.")]
     [Multiline]
@@ -55,9 +46,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Start()
     {
-        ScrollTracker.TriggerRangeUpdate();
-        Application.targetFrameRate = 120;
-        StartCoroutine(C_OffContent());
+        ScrollTracker.FinalizeScrollContentAndTriggerRangeUpdate();
     }
 
     #endregion
@@ -77,7 +66,8 @@ public class InventoryManager : MonoBehaviour
         InventoryItemView firstItem = null;
         foreach (InventoryItemData itemData in ItemDatas)
         {
-            var newItem = Instantiate(InventoryItemPrefab, Container.transform);
+            var newItem = Instantiate(InventoryItemPrefab, 
+                ScrollTracker.ScrollRect.content.transform);
             newItem.SetUpView(itemData, this);
 
             if (firstItem == null)
@@ -87,13 +77,6 @@ public class InventoryManager : MonoBehaviour
         }
 
         return firstItem;
-    }
-
-    private IEnumerator C_OffContent()
-    {
-        yield return new WaitForEndOfFrame();
-        Destroy(fitter);
-        Destroy(layoutGroup);
     }
 
     /// <summary>

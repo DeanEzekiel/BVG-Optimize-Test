@@ -1223,9 +1223,6 @@ MonoBehaviour:
   InfoPanel: {fileID: 721236621}
   InventoryItemPrefab: {fileID: 1349727978}
   ScrollTracker: {fileID: 833496522}
-  fitter: {fileID: 466751964}
-  layoutGroup: {fileID: 466751963}
-  Container: {fileID: 466751961}
   ItemJson: "{\r\n    \"ItemDatas\":\r\n    [\r\n        {\r\n            \"Name\":
     \"carton of ice cream\",\r\n            \"Description\": \"A carton of ice cream.\",\r\n           
     \"Stat\": 94,\r\n            \"IconIndex\": 29\r\n        },\r\n        {\r\n           
@@ -1609,7 +1606,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86fa2ca92f3e36c4cac16e0d6dd8d24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buffer: 100
+  scrollRect: {fileID: 833496519}
+  buffer: 25
 --- !u!1 &879903438
 GameObject:
   m_ObjectHideFlags: 0

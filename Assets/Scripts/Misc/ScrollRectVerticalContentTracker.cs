@@ -22,6 +22,9 @@ namespace Ren.Misc
         #region Inspector Fields
 
         [SerializeField]
+        private ScrollRect scrollRect;
+
+        [SerializeField]
         [Range(0f, 500f)]
         [Tooltip("Additional value for the range of content doled out by this script to its subscribers.")]
         private float buffer = 500f;
@@ -30,12 +33,16 @@ namespace Ren.Misc
 
         #region Private Fields
 
-        private ScrollRect scrollRect;
         private float scrollRectHeight;
-
         private Action<float, float> subscribers;
 
         #endregion //Private Fields
+
+        #region Accessors
+
+        public ScrollRect ScrollRect => scrollRect;
+
+        #endregion //Accessors
 
         #region Unity Callbacks
 
@@ -48,11 +55,21 @@ namespace Ren.Misc
 
         #region Public API
 
-        public void TriggerRangeUpdate()
+        /// <summary>
+        /// Sets the ScrollRect's Content to its final dimensions and 
+        /// not accept further changes before triggering a forced view range update.
+        /// </summary>
+        public void FinalizeScrollContentAndTriggerRangeUpdate()
         {
-            StartCoroutine(C_TriggerRangeUpdateAfterFrame());
+            StartCoroutine(C_FinalizeScrollContentTriggerRangeUpdateAfterFrame());
         }
 
+        /// <summary>
+        /// Register a delegate to be notified every time the scroll content
+        /// view range is updated. 
+        /// </summary>
+        /// <param name="callback">The delegate to be called.
+        /// Accepts a float minRange, and a float maxRange value.</param>
         public void SubscribeToOnViewRangeChange(Action<float, float> callback)
         {
             if (callback == null)
@@ -63,6 +80,10 @@ namespace Ren.Misc
             subscribers += callback;
         }
 
+        /// <summary>
+        /// Unregister a previously registered delegate via SubscribeToOnViewRangeChange().
+        /// </summary>
+        /// <param name="callback">The delegate to be unregistered.</param>
         public void UnsubscribeToOnViewRangeChange(Action<float, float> callback)
         {
             if (callback == null)
@@ -79,14 +100,28 @@ namespace Ren.Misc
 
         private void Init()
         {
-            scrollRect = GetComponent<ScrollRect>();
             scrollRect.onValueChanged.AddListener(OnViewRangeChange);
             scrollRectHeight = scrollRect.GetComponent<RectTransform>().rect.height;
         }
 
-        private IEnumerator C_TriggerRangeUpdateAfterFrame()
+        private void RemoveScrollContentDynamicitySetup()
+        {
+            if (scrollRect.content.gameObject.TryGetComponent<ContentSizeFitter>(
+                out var fitter))
+            {
+                Destroy(fitter);
+            }
+            if (scrollRect.content.gameObject.TryGetComponent<VerticalLayoutGroup>(
+                out var vLayoutGroup))
+            {
+                Destroy(vLayoutGroup);
+            }
+        }
+
+        private IEnumerator C_FinalizeScrollContentTriggerRangeUpdateAfterFrame()
         {
             yield return new WaitForEndOfFrame();
+            RemoveScrollContentDynamicitySetup();
             OnViewRangeChange(Vector2.zero);
         }
 
