@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 721236619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b69f27d8a4d782040ad95cb4150b05d1, type: 3}
+  m_Script: {fileID: 11500000, guid: b8e9e6e5689086842b74f405fd8cdec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textName: {fileID: 2140209194}
@@ -1220,10 +1220,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dabafdc4b7f95e47a109e19078aef28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  infoPanel: {fileID: 721236621}
-  inventoryItemPrefab: {fileID: 1349727978}
-  scrollTracker: {fileID: 833496522}
   settings: {fileID: 11400000, guid: 71297f150b327aa47b466edaa21ed16c, type: 2}
+  viewInfoPanel: {fileID: 721236621}
+  viewInventoryItem: {fileID: 1349727978}
+  scrollTracker: {fileID: 833496522}
 --- !u!4 &814978930
 Transform:
   m_ObjectHideFlags: 0
