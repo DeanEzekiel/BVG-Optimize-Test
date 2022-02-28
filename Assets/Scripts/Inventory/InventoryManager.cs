@@ -1,52 +1,72 @@
 using UnityEngine;
 using Ren.Misc;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, IInventoryManager
 {
 
     #region Inspector Fields
 
-    public InventoryInfoPanel InfoPanel;
-    public InventoryItemView InventoryItemPrefab;
+    [SerializeField]
+    private InventorySettings settings;
 
     [Space]
 
-    public ScrollRectVerticalContentTracker ScrollTracker;
+    [SerializeField]
+    private InventoryInfoPanel infoPanel;
+    [SerializeField]
+    private InventoryItemView inventoryItemPrefab;
+    [SerializeField]
+    private ScrollRectVerticalContentTracker scrollTracker;
 
-    [Space]
+    #endregion //Inspector Fields
 
-    [Tooltip(tooltip:"Loads the list using this format.")]
-    [Multiline]
-    public string ItemJson;
+    #region Private Fields
 
-    [Tooltip(tooltip:"This is used in generating the items list. The number of additional copies to concat the list parsed from ItemJson.")]
-    public int ItemGenerateScale = 10;
+    private InventoryItemView previousSelectedItem;
 
-    [Tooltip(tooltip:"Icons referenced by ItemData.IconIndex when instantiating new items.")]
-    public Sprite[] Icons;
-
-    #endregion
-
-    private InventoryItemView cachedSelectedItem;
+    #endregion //Private Fields
 
     #region Unity Callbacks
 
     private void Awake()
     {
-        var ItemDatas = GenerateItemDatas(ItemJson, ItemGenerateScale);
+        var ItemDatas = GenerateItemDatas(settings.ItemJson.text, 
+            (int)settings.ItemGenerateScale);
         var firstItem = InstantiateAllItems(ItemDatas);
 
         // Select the first item.
-        InventoryItemOnClick(firstItem);
+        OnClickInventoryItem(firstItem);
 
-        Destroy(InventoryItemPrefab.gameObject);
-        Icons = null;
-        ItemJson = null;
+        Destroy(inventoryItemPrefab.gameObject);
     }
 
     private void Start()
     {
-        ScrollTracker.FinalizeScrollContentAndTriggerRangeUpdate();
+        scrollTracker.FinalizeScrollContentAndTriggerRangeUpdate();
+    }
+
+    #endregion //Unity Callbacks
+
+    #region IInventoryManager Implementations
+
+    public ScrollRectVerticalContentTracker GetScrollTracker() => scrollTracker;
+    public InventorySettings GetSettings() => settings;
+
+    public void OnClickInventoryItem(InventoryItemView itemClicked)
+    {
+        if (previousSelectedItem != null)
+        {
+            previousSelectedItem.SetSelected(false);
+        }
+
+        if (itemClicked == null)
+        {
+            return;
+        }
+
+        itemClicked.SetSelected(true);
+        previousSelectedItem = itemClicked;
+        infoPanel.DisplayInfo(itemClicked.ItemData);
     }
 
     #endregion
@@ -66,8 +86,8 @@ public class InventoryManager : MonoBehaviour
         InventoryItemView firstItem = null;
         foreach (InventoryItemData itemData in ItemDatas)
         {
-            var newItem = Instantiate(InventoryItemPrefab, 
-                ScrollTracker.ScrollRect.content.transform);
+            var newItem = Instantiate(inventoryItemPrefab, 
+                scrollTracker.ScrollRect.content.transform);
             newItem.SetUpView(itemData, this);
 
             if (firstItem == null)
@@ -100,23 +120,6 @@ public class InventoryManager : MonoBehaviour
         return finalItemDatas;
     }
 
-    public void InventoryItemOnClick(InventoryItemView itemClicked)
-    {
-        if (cachedSelectedItem != null)
-        {
-            cachedSelectedItem.SetSelected(false);
-        }
-
-        if (itemClicked == null)
-        {
-            return;
-        }
-
-        itemClicked.SetSelected(true);
-        cachedSelectedItem = itemClicked;
-        InfoPanel.DisplayInfo(itemClicked.ItemData);
-    }
-
-    #endregion
+    #endregion //Class Implementation
 
 }

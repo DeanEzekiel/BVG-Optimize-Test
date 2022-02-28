@@ -55,7 +55,7 @@ public class InventoryItemView : MonoBehaviour
     /// </summary>
     /// <param name="itemData">Contains the data to be shown to the user.</param>
     /// <param name="manager">The class to be referenced for additional data processes and updates.</param>
-    public void SetUpView(InventoryItemData itemData, InventoryManager manager)
+    public void SetUpView(InventoryItemData itemData, IInventoryManager manager)
     {
         if (itemData == null || manager == null)
         {
@@ -66,13 +66,13 @@ public class InventoryItemView : MonoBehaviour
 
         this.itemData = itemData;
 
-        imageIcon.sprite = manager.Icons[itemData.IconIndex];
+        imageIcon.sprite = manager.GetSettings().Icons[itemData.IconIndex];
         textName.text = itemData.Name;
-        button.onClick.AddListener(() => manager.InventoryItemOnClick(this));
+        button.onClick.AddListener(() => manager.OnClickInventoryItem(this));
         SetSelected(false);
 
         gameObject.SetActive(true);
-        manager.ScrollTracker.SubscribeToOnViewRangeChange(OnViewRangeChange);
+        manager.GetScrollTracker().SubscribeToOnViewRangeChange(OnViewRangeChange);
     }
 
     public void SetSelected(bool isSelected)
