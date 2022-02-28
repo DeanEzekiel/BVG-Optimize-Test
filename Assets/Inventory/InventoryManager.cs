@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,15 @@ public class InventoryManager : MonoBehaviour
 
     public InventoryInfoPanel InfoPanel;
     public InventoryItem InventoryItemPrefab;
+
+    [Space]
+
+    public ScrollRectVerticalContentTracker ScrollTracker;
+
+    public ContentSizeFitter fitter;
+    public VerticalLayoutGroup layoutGroup;
+
+    [Space]
 
     public GameObject Container;
 
@@ -35,10 +45,8 @@ public class InventoryManager : MonoBehaviour
 
     #region Unity Callbacks
 
-    private void Start()
+    private void Awake()
     {
-        //Application.targetFrameRate = 60;
-
         var ItemDatas = GenerateItemDatas(ItemJson, ItemGenerateScale);
         var firstItem = InstantiateAllItems(ItemDatas);
 
@@ -46,6 +54,14 @@ public class InventoryManager : MonoBehaviour
         InventoryItemOnClick(firstItem);
 
         Destroy(InventoryItemPrefab.gameObject);
+        Icons = null;
+        ItemJson = null;
+    }
+
+    private void Start()
+    {
+        Application.targetFrameRate = 120;
+        StartCoroutine(C_OffContent());
     }
 
     #endregion
@@ -75,6 +91,13 @@ public class InventoryManager : MonoBehaviour
         }
 
         return firstItem;
+    }
+
+    private IEnumerator C_OffContent()
+    {
+        yield return new WaitForEndOfFrame();
+        Destroy(fitter);
+        Destroy(layoutGroup);
     }
 
     /// <summary>
