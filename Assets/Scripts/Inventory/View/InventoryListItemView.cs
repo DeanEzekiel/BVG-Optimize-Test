@@ -7,7 +7,15 @@ using Inventory.Presenter;
 namespace Inventory.View
 {
 
-    public class InventoryItemView : MonoBehaviour
+    /// <summary>
+    /// Only displays a given InventoryItemData object's preview details on a list.
+    /// Nothing more.
+    /// Doesn't handle any logical operation, as this is a view class.
+    /// Any logical operation, is relayed to a corresponding presenter class.
+    /// 
+    /// -Renelie Salazar
+    /// </summary>
+    public class InventoryListItemView : MonoBehaviour
     {
 
         #region Inspector Fields

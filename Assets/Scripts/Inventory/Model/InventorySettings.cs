@@ -3,6 +3,11 @@ using UnityEngine;
 namespace Inventory.Model
 {
 
+    /// <summary>
+    /// Contains data necessary for the configuration of the Inventory.
+    /// 
+    /// -Renelie Salazar
+    /// </summary>
     [CreateAssetMenu(fileName = "New Inventory Settings",
         menuName = "Exam / New Inventory Settings")]
     public class InventorySettings : ScriptableObject

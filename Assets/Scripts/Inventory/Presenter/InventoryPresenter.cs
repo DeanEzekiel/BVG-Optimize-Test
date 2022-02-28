@@ -6,6 +6,14 @@ using Inventory.View;
 namespace Inventory.Presenter
 {
 
+    /// <summary>
+    /// Contains all the logical operations pertaining to Inventory items.
+    /// [1] Loads and initializes list items views,
+    /// [2] manages list items' selected/unselected states,
+    /// [3] executes the display of a selected list item's full details.
+    /// 
+    /// -Renelie Salazar
+    /// </summary>
     public class InventoryPresenter : MonoBehaviour, IInventoryPresenter
     {
 
@@ -19,7 +27,7 @@ namespace Inventory.Presenter
         [SerializeField]
         private InventoryInfoPanelView viewInfoPanel;
         [SerializeField]
-        private InventoryItemView viewInventoryItem;
+        private InventoryListItemView viewInventoryItem;
         [SerializeField]
         private ScrollRectVerticalContentTracker scrollTracker;
 
@@ -30,7 +38,7 @@ namespace Inventory.Presenter
         /// <summary>
         /// The cached reference of the previously highlighted inventory item.
         /// </summary>
-        private InventoryItemView previousSelectedItem;
+        private InventoryListItemView previousSelectedItem;
 
         #endregion //Private Fields
 
@@ -60,7 +68,7 @@ namespace Inventory.Presenter
         public ScrollRectVerticalContentTracker GetScrollTracker() => scrollTracker;
         public InventorySettings GetSettings() => settings;
 
-        public void OnClickInventoryItem(InventoryItemView itemClicked)
+        public void OnClickInventoryItem(InventoryListItemView itemClicked)
         {
             if (previousSelectedItem != null)
             {
@@ -84,14 +92,14 @@ namespace Inventory.Presenter
         /// <summary>
         /// Instantiate items in the Scroll View.
         /// </summary>
-        private InventoryItemView InstantiateAllItems(InventoryItemData[] ItemDatas)
+        private InventoryListItemView InstantiateAllItems(InventoryItemData[] ItemDatas)
         {
             if (ItemDatas == null)
             {
                 return null;
             }
 
-            InventoryItemView firstItem = null;
+            InventoryListItemView firstItem = null;
             foreach (InventoryItemData itemData in ItemDatas)
             {
                 var newItem = Instantiate(viewInventoryItem,

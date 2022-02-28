@@ -5,6 +5,12 @@ using Inventory.Model;
 namespace Inventory.View
 {
 
+    /// <summary>
+    /// Only displays a given InventoryItemData object's full details. Nothing more.
+    /// Doesn't handle any logical operation, as this is a view class.
+    /// 
+    /// -Renelie Salazar
+    /// </summary>
     public class InventoryInfoPanelView : MonoBehaviour
     {
 

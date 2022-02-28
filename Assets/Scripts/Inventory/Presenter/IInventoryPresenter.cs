@@ -11,7 +11,7 @@ namespace Inventory.Presenter
         ScrollRectVerticalContentTracker GetScrollTracker();
         InventorySettings GetSettings();
 
-        void OnClickInventoryItem(InventoryItemView itemClicked);
+        void OnClickInventoryItem(InventoryListItemView itemClicked);
 
     }
 
