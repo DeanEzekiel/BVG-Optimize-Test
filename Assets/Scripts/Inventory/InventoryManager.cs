@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Ren.Misc;
 
 public class InventoryManager : MonoBehaviour
 {
