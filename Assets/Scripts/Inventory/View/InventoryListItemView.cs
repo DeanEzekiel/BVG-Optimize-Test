@@ -67,25 +67,25 @@ namespace Inventory.View
         /// Prepares this item's content and 
         /// </summary>
         /// <param name="itemData">Contains the data to be shown to the user.</param>
-        /// <param name="manager">The class to be referenced for additional data processes and updates.</param>
-        public void SetUpView(InventoryItemData itemData, IInventoryPresenter manager)
+        /// <param name="presenter">The class to be referenced for logical operations.</param>
+        public void SetUpView(InventoryItemData itemData, IInventoryPresenter presenter)
         {
-            if (itemData == null || manager == null)
+            if (itemData == null || presenter == null)
             {
                 Debug.LogWarning($"{GetType().Name}: Cannot set up this view if " +
-                    $"ItemData and/or Manager is missing.", gameObject);
+                    $"ItemData and/or Presenter is missing.", gameObject);
                 return;
             }
 
             this.itemData = itemData;
 
-            imageIcon.sprite = manager.GetSettings().Icons[itemData.IconIndex];
+            imageIcon.sprite = presenter.GetSettings().Icons[itemData.IconIndex];
             textName.text = itemData.Name;
-            button.onClick.AddListener(() => manager.OnClickInventoryItem(this));
+            button.onClick.AddListener(() => presenter.OnClickInventoryItem(this));
             SetSelected(false);
 
             gameObject.SetActive(true);
-            manager.GetScrollTracker().SubscribeToOnViewRangeChange(OnViewRangeChange);
+            presenter.GetScrollTracker().SubscribeToOnViewRangeChange(OnViewRangeChange);
         }
 
         public void SetSelected(bool isSelected)

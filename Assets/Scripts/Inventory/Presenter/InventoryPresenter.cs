@@ -82,7 +82,7 @@ namespace Inventory.Presenter
 
             itemClicked.SetSelected(true);
             previousSelectedItem = itemClicked;
-            viewInfoPanel.DisplayInfo(itemClicked.ItemData);
+            viewInfoPanel.DisplayInfo(itemClicked.ItemData, this);
         }
 
         #endregion

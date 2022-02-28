@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using Inventory.Model;
+using UnityEngine.UI;
+using Inventory.Presenter;
 
 namespace Inventory.View
 {
@@ -25,17 +27,21 @@ namespace Inventory.View
         [SerializeField]
         private TextMeshProUGUI textStats;
 
+        [SerializeField]
+        private Image imageIcon;
+
         #endregion
 
         #region Public API
 
-        public void DisplayInfo(InventoryItemData itemData)
+        public void DisplayInfo(InventoryItemData itemData, IInventoryPresenter presenter)
         {
             if (itemData == null)
             {
                 return;
             }
 
+            imageIcon.sprite = presenter.GetSettings().Icons[itemData.IconIndex];
             textName.text = itemData.Name;
             textDescription.text = itemData.Description;
             textStats.text = itemData.Stat.ToString();
