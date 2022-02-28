@@ -264,7 +264,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3524837760268592273}
   - component: {fileID: 6081411390659113483}
-  - component: {fileID: 7584727167401722497}
   m_Layer: 5
   m_Name: InventoryItem
   m_TagString: Untagged
@@ -306,23 +305,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab982d58559817b4f8123a0bec6153ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasGroup: {fileID: 7584727167401722497}
   imageBackground: {fileID: 3524837759571232111}
   imageIcon: {fileID: 8701206775993556585}
   textName: {fileID: 3476356805178039162}
   button: {fileID: 5462570301140289662}
---- !u!225 &7584727167401722497
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3524837760268592278}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  colorIsActive: {r: 1, g: 0, b: 0, a: 1}
+  colorIsInactive: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6094784086906774804
 GameObject:
   m_ObjectHideFlags: 0

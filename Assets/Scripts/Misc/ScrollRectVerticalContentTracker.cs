@@ -9,9 +9,9 @@ namespace Ren.Misc
     /// <summary>
     /// A script that notifies its subscribers about the min and max range 
     /// (expressed in floating y position) of items viewable on the Content
-    /// of a given ScrollRect. Updates are done:
-    /// [1] after the first few frames (for initialization), and
-    /// [2] after every scroll action performed on the ScrollRect.
+    /// of a given ScrollRect.
+    /// 
+    /// Updates are done after every scroll action performed on the ScrollRect.
     /// 
     /// -Renelie Salazar
     /// </summary>
@@ -31,9 +31,9 @@ namespace Ren.Misc
         #region Private Fields
 
         private ScrollRect scrollRect;
-        private float height;
+        private float scrollRectHeight;
 
-        private Action<float, float> callbacks;
+        private Action<float, float> subscribers;
 
         #endregion //Private Fields
 
@@ -41,19 +41,17 @@ namespace Ren.Misc
 
         private void Awake()
         {
-            scrollRect = GetComponent<ScrollRect>();
-            scrollRect.onValueChanged.AddListener(OnViewRangeChange);
-            height = scrollRect.GetComponent<RectTransform>().rect.height;
-        }
-
-        private IEnumerator Start()
-        {
-            yield return StartCoroutine(C_AutoNotifyAllSubscribers());
+            Init();
         }
 
         #endregion //Unity Callbacks
 
         #region Public API
+
+        public void TriggerRangeUpdate()
+        {
+            StartCoroutine(C_TriggerRangeUpdateAfterFrame());
+        }
 
         public void SubscribeToOnViewRangeChange(Action<float, float> callback)
         {
@@ -62,7 +60,7 @@ namespace Ren.Misc
                 return;
             }
 
-            callbacks += callback;
+            subscribers += callback;
         }
 
         public void UnsubscribeToOnViewRangeChange(Action<float, float> callback)
@@ -72,18 +70,23 @@ namespace Ren.Misc
                 return;
             }
 
-            callbacks -= callback;
+            subscribers -= callback;
         }
 
         #endregion //Public API
 
         #region Class Implementation
 
-        private IEnumerator C_AutoNotifyAllSubscribers()
+        private void Init()
+        {
+            scrollRect = GetComponent<ScrollRect>();
+            scrollRect.onValueChanged.AddListener(OnViewRangeChange);
+            scrollRectHeight = scrollRect.GetComponent<RectTransform>().rect.height;
+        }
+
+        private IEnumerator C_TriggerRangeUpdateAfterFrame()
         {
             yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
-
             OnViewRangeChange(Vector2.zero);
         }
 
@@ -91,9 +94,9 @@ namespace Ren.Misc
         {
             var beginning = scrollRect.content.localPosition.y;
             var minRange = beginning - buffer;
-            var maxRange = beginning + height + buffer;
-
-            callbacks?.Invoke(minRange, maxRange);
+            var maxRange = beginning + scrollRectHeight + buffer;
+            
+            subscribers?.Invoke(minRange, maxRange);
         }
 
         #endregion //Class Implementation

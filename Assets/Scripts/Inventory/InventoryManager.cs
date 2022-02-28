@@ -11,7 +11,7 @@ public class InventoryManager : MonoBehaviour
     #region Inspector Fields
 
     public InventoryInfoPanel InfoPanel;
-    public InventoryItem InventoryItemPrefab;
+    public InventoryItemView InventoryItemPrefab;
 
     [Space]
 
@@ -36,13 +36,7 @@ public class InventoryManager : MonoBehaviour
 
     #endregion
 
-    private InventoryItem cachedSelectedItem;
-
-    [Serializable]
-    private class InventoryItemDatas
-    {
-        public InventoryItemData[] ItemDatas;
-    }
+    private InventoryItemView cachedSelectedItem;
 
     #region Unity Callbacks
 
@@ -61,6 +55,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Start()
     {
+        ScrollTracker.TriggerRangeUpdate();
         Application.targetFrameRate = 120;
         StartCoroutine(C_OffContent());
     }
@@ -72,17 +67,17 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// Instantiate items in the Scroll View.
     /// </summary>
-    private InventoryItem InstantiateAllItems(InventoryItemData[] ItemDatas)
+    private InventoryItemView InstantiateAllItems(InventoryItemData[] ItemDatas)
     {
         if (ItemDatas == null)
         {
             return null;
         }
 
-        InventoryItem firstItem = null;
+        InventoryItemView firstItem = null;
         foreach (InventoryItemData itemData in ItemDatas)
         {
-            var newItem = Instantiate(InventoryItemPrefab);
+            var newItem = Instantiate(InventoryItemPrefab, Container.transform);
             newItem.SetUpView(itemData, this);
 
             if (firstItem == null)
@@ -122,7 +117,7 @@ public class InventoryManager : MonoBehaviour
         return finalItemDatas;
     }
 
-    public void InventoryItemOnClick(InventoryItem itemClicked)
+    public void InventoryItemOnClick(InventoryItemView itemClicked)
     {
         if (cachedSelectedItem != null)
         {
