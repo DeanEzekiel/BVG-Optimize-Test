@@ -3,5 +3,9 @@ using TMPro;
 
 public class InventoryInfoPanel : MonoBehaviour
 {
-    // TODO: Add members here.
+    // DGS01 Start
+    public TextMeshProUGUI NameText;
+    public TextMeshProUGUI DescriptionText;
+    public TextMeshProUGUI StatText;
+    // DGS01 End
 }

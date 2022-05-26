@@ -79,5 +79,11 @@ public class InventoryManager : MonoBehaviour
             item.Background.color = Color.white;
         }
         itemClicked.Background.color = Color.red;
+
+        // DGS01 Start - Show the details of the item clicked on the info panel
+        InfoPanel.NameText.text = itemData.Name;
+        InfoPanel.DescriptionText.text = itemData.Description;
+        InfoPanel.StatText.text = itemData.Stat.ToString();
+        // DGS01 End
     }
 }
