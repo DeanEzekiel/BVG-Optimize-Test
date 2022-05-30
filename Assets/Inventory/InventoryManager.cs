@@ -81,6 +81,7 @@ public class InventoryManager : MonoBehaviour
         itemClicked.Background.color = Color.red;
 
         // DGS01 Start - Show the details of the item clicked on the info panel
+        InfoPanel.Icon.sprite = itemClicked.Icon.sprite;
         InfoPanel.NameText.text = itemData.Name;
         InfoPanel.DescriptionText.text = itemData.Description;
         InfoPanel.StatText.text = itemData.Stat.ToString();
