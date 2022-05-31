@@ -32,6 +32,8 @@ public class InventoryManager : MonoBehaviour
 
     private List<InventoryItem> Items;
 
+    private InventoryItem cachedItem;
+
     // DGS03 FPS
     [SerializeField]
     private TextMeshProUGUI fpsText;
@@ -164,10 +166,12 @@ public class InventoryManager : MonoBehaviour
 
     private void InventoryItemOnClick(InventoryItem itemClicked, InventoryItemData itemData) 
     {
-        foreach (var item in Items) {
-            item.Background.color = Color.white;
+        if (cachedItem != null)
+        {
+            cachedItem.Background.color = Color.white;
         }
         itemClicked.Background.color = Color.red;
+        cachedItem = itemClicked;
 
         // DGS01 Start - Show the details of the item clicked on the info panel
         InfoPanel.Icon.sprite = itemClicked.Icon.sprite;
